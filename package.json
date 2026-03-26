@@ -1,0 +1,36 @@
+{
+  "name": "accord-pipeline",
+  "version": "1.0.0",
+  "description": "LLM-powered Accord Project contract template pipeline",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --loader ts-node/esm src/tests/runner.ts",
+    "test:compiled": "node dist/tests/runner.js",
+    "demo": "node --loader ts-node/esm src/demo.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "accord-project",
+    "cicero",
+    "concerto",
+    "smart-contracts",
+    "llm",
+    "contract-automation"
+  ],
+  "license": "Apache-2.0"
+}
