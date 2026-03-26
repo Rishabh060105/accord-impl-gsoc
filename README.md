@@ -23,11 +23,7 @@ The output is shaped by a contract-type registry, not by free-form generation. T
 - `ServiceAgreement`
 - `LatePenalty`
 
-## Initial Requirements
-
-The implementation started from a requirements-driven drafting workflow focused on schema control, deterministic generation, and Template Playground integration.
-
-![Initial requirements](assets/requirements.webp)
+The pipeline is provider-agnostic. Groq is one supported backend, but the architecture is compatible with other LLMs as well because extraction, repair, and contract-type identification are all routed through the shared provider interface.
 
 ## End-to-End Architecture
 
@@ -302,7 +298,11 @@ The public API in [`src/index.ts`](/Users/rishabhjain/Desktop/gsoc/accord-impl/s
 - `AnthropicProvider`
 - `OpenAIProvider`
 
-For local development, the demo and tests are easiest to run with `MockProvider`. The current live demo path in [`src/demo.ts`](/Users/rishabhjain/Desktop/gsoc/accord-impl/src/demo.ts) is wired around Groq when `USE_GROQ=true`.
+The pipeline is not tied to Groq. Any LLM can be used as long as it implements the `LLMProvider` contract in [`src/llm/interface.ts`](/Users/rishabhjain/Desktop/gsoc/accord-impl/src/llm/interface.ts).
+
+That means the same drafting pipeline can run with Groq, OpenAI, Anthropic, mock providers for testing, or any future backend added behind the same interface.
+
+For local development, the demo and tests are easiest to run with `MockProvider`. The current live demo path in [`src/demo.ts`](/Users/rishabhjain/Desktop/gsoc/accord-impl/src/demo.ts) is wired around Groq when `USE_GROQ=true`, but that is an implementation choice rather than an architectural limitation.
 
 ## Running the Project
 
