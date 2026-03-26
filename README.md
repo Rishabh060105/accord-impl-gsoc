@@ -9,14 +9,11 @@ This project implements a **semantics-aware contract drafting system** that comb
 * **Deterministic contract generation**
 * **Accord Project-compatible artifacts**
 
-![Initial Requirements Spec](file:///Users/rishabhjain/.gemini/antigravity/brain/1d7d12d5-1a8a-44f4-b6ff-2cc254a80d7e/read_pdf_requirements_1774509126677.webp)
+### Project Context & Initial Requirements
 
-The system converts a plain-English contract brief into:
+The system was designed following the spec for a robust, model-driven drafting pipeline that ensures legal consistency and structural integrity.
 
-* `model.cto` (Concerto data model)
-* `grammar.tem.md` (TemplateMark contract text)
-* `logic.ergo` (Executable contract logic)
-* `package.json` (Accord template package)
+![Initial Requirements Spec](assets/requirements.webp)
 
 ---
 
@@ -40,22 +37,52 @@ This ensures:
 
 ---
 
-## Alignment with Accord Project
+## Template Playground Integration
 
-This system follows the architecture of Accord Project:
+This system is fully integrated with the **Accord Project Template Playground**, allowing users to switch between the legacy regex engine and the new AI-powered drafting engine.
 
-| Accord Concept         | This System                |
-| ---------------------- | -------------------------- |
-| Model (Concerto)       | IR → `model.cto`           |
-| Grammar (TemplateMark) | Generated `grammar.tem.md` |
-| Logic (Ergo)           | Generated `logic.ergo`     |
-| Template Package       | Generated `package.json`   |
+![Playground Integration - Full View](assets/playground_full.png)
 
-### Important Design Constraint
+### Engine Selection
+The UI allows users to toggle between the deterministic (Regex) engine and the LLM-powered engine.
 
-* The **model defines the contract semantics**
-* The **template binds to the model**
-* The **LLM never defines schema**
+![Drafting Panel Toggle](assets/Screenshot 2026-03-26 at 2.52.14 PM.png)
+
+### Integration Flow
+1. Generate template package: `model.cto`, `grammar.tem.md`, `logic.ergo`, `package.json`.
+2. Import into Playground:
+   * Upload files
+   * Or paste into editor
+3. Test:
+   * Clause parsing
+   * Data binding
+   * Logic execution
+
+---
+
+## Generated Artifacts (Visual Analysis)
+
+The system produces three primary Accord Project artifacts from a single contract brief.
+
+### 1. TemplateMark (Grammar)
+The generated grammar includes variable bindings and formatted human-readable text.
+
+| Details Extraction | Bound Clause Text |
+| ----------------- | ---------------- |
+| ![TemplateMark Binding 1](assets/Screenshot 2026-03-26 at 2.52.29 PM.png) | ![TemplateMark Text](assets/Screenshot 2026-03-26 at 2.52.51 PM.png) |
+| ![TemplateMark Binding 2](assets/Screenshot 2026-03-26 at 2.52.42 PM.png) | |
+
+### 2. Concerto (Data Model)
+The system creates a strictly typed Concerto model (`.cto`) that maps exactly to the extracted IR fields.
+
+![Concerto Model Header](assets/Screenshot 2026-03-26 at 2.53.06 PM.png)
+![Concerto Model Fields](assets/Screenshot 2026-03-26 at 2.53.16 PM.png)
+
+### 3. Ergo (Executable Logic)
+For supported contract types, the system generates executable Ergo logic stubs to handle contract events.
+
+![Ergo Logic 1](assets/Screenshot 2026-03-26 at 2.53.27 PM.png)
+![Ergo Logic 2](assets/Screenshot 2026-03-26 at 2.53.41 PM.png)
 
 ---
 
@@ -86,14 +113,11 @@ Validator + Repair Loop
 The IR is the **semantic core** of the system.
 
 ### Properties
-
 * Contract-type aware
 * Strictly schema-bound
-* Supports nested conditions (AST)
-* Includes confidence and ambiguity markers
+* Supports confidence and ambiguity markers
 
 ### Example (LatePenalty)
-
 ```json
 {
   "contractType": "LatePenalty",
@@ -109,147 +133,9 @@ The IR is the **semantic core** of the system.
 
 ---
 
-## Contract Types Supported
+## Validation & Repair Loop
 
-### 1. DeliveryPayment
-
-* Buyer–seller contracts
-* Delivery-triggered payment obligations
-
-### 2. ServiceAgreement
-
-* Client–provider relationships
-* Fixed fee / hourly hybrid models
-
-### 3. LatePenalty
-
-* Penalty computation for late obligations
-* Includes executable Ergo logic
-
----
-
-## LLM Integration (Groq)
-
-The system uses Groq for:
-
-* Contract type classification
-* IR field extraction
-* IR repair (if validation fails)
-
-### Why Groq
-
-* Fast inference
-* OpenAI-compatible API
-* Structured output support
-
-### Important Constraint
-
-LLM is only allowed to:
-
-* Fill known schema fields
-* Return structured JSON
-
-LLM is NOT allowed to:
-
-* Create new fields
-* Generate contract text directly
-
----
-
-## Validation System
-
-The validator ensures:
-
-### Structural Checks
-
-* Required fields exist
-* No unknown fields
-* Correct data types
-
-### Semantic Checks
-
-* Missing obligation parties
-* Logical inconsistencies
-* Invalid condition structures
-
-### Output
-
-```json
-{
-  "isValid": true,
-  "verdict": "valid",
-  "issues": []
-}
-```
-
----
-
-## Repair Loop
-
-If validation fails:
-
-1. Errors are sent back to LLM
-2. LLM updates IR only
-3. Pipeline re-runs
-
-This creates a **self-correcting drafting system**
-
----
-
-## Code Structure
-
-```
-src/
-  contract-types/   → Schema definitions
-  ir/               → IR types and normalization
-  llm/              → Groq + provider abstraction
-  generator/        → Template + model + logic generation
-  validator/        → Semantic validation engine
-  parser/           → Classification + extraction helpers
-  accord-impl/      → Accord-specific integrations
-```
-
----
-
-## Accord Implementation Layer (`accord-impl`)
-
-This module bridges IR → Accord artifacts.
-
-### Responsibilities
-
-* Generate Concerto models
-* Generate TemplateMark grammar
-* Generate Ergo logic
-* Build template package
-
-This ensures strict compatibility with Accord tooling.
-
----
-
-## Template Playground Integration
-
-This system is fully integrated with the **Accord Project Template Playground**.
-
-![Playground Integration](file:///Users/rishabhjain/.gemini/antigravity/brain/1d7d12d5-1a8a-44f4-b6ff-2cc254a80d7e/drafting_panel_integration_1774516031125.png)
-
-### Integration Flow
-
-1. Generate template package:
-   - `model.cto`
-   - `grammar.tem.md`
-   - `logic.ergo`
-   - `package.json`
-
-2. Import into Playground:
-
-   * Upload files
-   * Or paste into editor
-
-3. Test:
-
-   * Clause parsing
-   * Data binding
-   * Logic execution
+The validator ensures structural and semantic integrity. If validation fails, errors are fed back into the LLM for a targeted repair pass, creating a **self-correcting drafting system**.
 
 ---
 
@@ -261,48 +147,11 @@ npm run demo
 ```
 
 To enable Groq:
-
 ```bash
 # .env file
 USE_GROQ=true
 GROQ_API_KEY=your_key_here
 ```
-
----
-
-## Example Output
-
-```
-▶ Pipeline Result: SUCCESS
-Contract Type: LatePenalty
-Repair passes: 0
-```
-
-Generated:
-
-* `model.cto`
-* `grammar.tem.md`
-* `logic.ergo`
-* `package.json`
-
----
-
-## Limitations
-
-* Limited contract types (currently 3)
-* No multi-clause composition yet
-* Runtime inputs (e.g. baseAmount) not fully modeled
-* Logic is template-based, not fully inferred
-
----
-
-## Future Work
-
-* Multi-clause contracts
-* Nested condition support (full AST)
-* Better financial modeling
-* Clause composition engine
-* Full Accord execution lifecycle integration
 
 ---
 
