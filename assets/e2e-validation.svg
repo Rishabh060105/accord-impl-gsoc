@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="580" viewBox="0 0 1280 580">
+<rect width="100%" height="100%" fill="#f4f7fb"/>
+<rect x="36" y="28" rx="18" ry="18" width="1208" height="86" fill="#123b4a"/>
+<text x="68" y="72" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="32" font-weight="700" fill="#ffffff">Final Validation Result</text>
+<text x="68" y="102" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="17" fill="#cde7ef">Validation detects unresolved required fields and hands them back to the Repair Specialist Agent until the retry limit is reached.</text>
+<rect x="36" y="150" rx="18" ry="18" width="1208" height="380" fill="#0f172a" stroke="#1f2a44"/>
+<circle cx="68" cy="176" r="7" fill="#ff5f56"/><circle cx="92" cy="176" r="7" fill="#ffbd2e"/><circle cx="116" cy="176" r="7" fill="#27c93f"/>
+<text x="68" y="212" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">{</text>
+<text x="68" y="238" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  &quot;valid&quot;: false,</text>
+<text x="68" y="264" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  &quot;errors&quot;: [</text>
+<text x="68" y="290" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">    {</text>
+<text x="68" y="316" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">      &quot;field&quot;: &quot;deliveryDate&quot;,</text>
+<text x="68" y="342" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">      &quot;code&quot;: &quot;MISSING_REQUIRED&quot;,</text>
+<text x="68" y="368" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">      &quot;message&quot;: &quot;Required field &quot;deliveryDate&quot; is missing or null&quot;</text>
+<text x="68" y="394" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">    }</text>
+<text x="68" y="420" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  ],</text>
+<text x="68" y="446" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  &quot;warnings&quot;: []</text>
+<text x="68" y="472" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">}</text>
+<text x="68" y="498" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">! The repair loop stops after the retry limit and surfaces the unresolved</text>
+<text x="68" y="524" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  requirement instead of fabricating a delivery date.</text>
+</svg>

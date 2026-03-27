@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="658" viewBox="0 0 1280 658">
+<rect width="100%" height="100%" fill="#f4f7fb"/>
+<rect x="36" y="28" rx="18" ry="18" width="1208" height="86" fill="#123b4a"/>
+<text x="68" y="72" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="32" font-weight="700" fill="#ffffff">Generated Intermediate Representation (IR)</text>
+<text x="68" y="102" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="17" fill="#cde7ef">The IR preserves the extracted business facts, normalizes USD, and leaves unspecified fields null instead of inventing values.</text>
+<rect x="36" y="150" rx="18" ry="18" width="1208" height="458" fill="#0f172a" stroke="#1f2a44"/>
+<circle cx="68" cy="176" r="7" fill="#ff5f56"/><circle cx="92" cy="176" r="7" fill="#ffbd2e"/><circle cx="116" cy="176" r="7" fill="#27c93f"/>
+<text x="68" y="212" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">{</text>
+<text x="68" y="238" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  &quot;contractType&quot;: &quot;DeliveryPayment&quot;,</text>
+<text x="68" y="264" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  &quot;schemaVersion&quot;: &quot;1.0&quot;,</text>
+<text x="68" y="290" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  &quot;fields&quot;: {</text>
+<text x="68" y="316" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">    &quot;buyer&quot;: &quot;Alice&quot;,</text>
+<text x="68" y="342" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">    &quot;seller&quot;: &quot;Bob&quot;,</text>
+<text x="68" y="368" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">    &quot;deliveryItem&quot;: &quot;goods&quot;,</text>
+<text x="68" y="394" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">    &quot;deliveryDate&quot;: null,</text>
+<text x="68" y="420" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">    &quot;paymentAmount&quot;: 7500,</text>
+<text x="68" y="446" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">    &quot;currency&quot;: &quot;USD&quot;,</text>
+<text x="68" y="472" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">    &quot;paymentDueDays&quot;: 7,</text>
+<text x="68" y="498" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">    &quot;deliveryLocation&quot;: null</text>
+<text x="68" y="524" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  },</text>
+<text x="68" y="550" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  &quot;providerUsed&quot;: &quot;groq&quot;,</text>
+<text x="68" y="576" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  &quot;repairPass&quot;: 3</text>
+<text x="68" y="602" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">}</text>
+</svg>

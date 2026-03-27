@@ -101,22 +101,34 @@ export class MockProvider implements LLMProvider {
     errors: ValidationError[],
     currentIR: IR
   ): Promise<IRFields> {
-    // Simulate repair: set failing fields to plausible default values
+    // Simulate only allowed repairs: normalization and format cleanup.
     const repaired: IRFields = { ...currentIR.fields };
 
     for (const err of errors) {
       switch (err.code) {
-        case "MISSING_REQUIRED":
-          repaired[err.field] = `[MOCK_REPAIRED_${err.field}]`;
+        case "ENUM_VIOLATION": {
+          const value = repaired[err.field];
+          if (typeof value === "string") {
+            repaired[err.field] = value.trim().toUpperCase();
+          }
           break;
-        case "WRONG_TYPE":
-          repaired[err.field] = 0;
+        }
+        case "WRONG_TYPE": {
+          const value = repaired[err.field];
+          if (typeof value === "string") {
+            const normalized = value.trim();
+            const parsedDate = new Date(normalized);
+            if (!Number.isNaN(parsedDate.getTime())) {
+              repaired[err.field] = parsedDate.toISOString();
+            } else {
+              repaired[err.field] = normalized;
+            }
+          }
           break;
-        case "ENUM_VIOLATION":
-          repaired[err.field] = "USD";
-          break;
+        }
         default:
-          repaired[err.field] = null;
+          // Leave substantive missing or contradictory values untouched.
+          break;
       }
     }
 

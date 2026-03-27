@@ -69,8 +69,31 @@ CONTRACT TEXT (original):
 ${input}
 """
 
-Return a corrected JSON object containing ALL fields (not just the fixed ones).
-Fix only the failing fields. Do not change fields that passed validation.`;
+REPAIR POLICY (strict):
+1. Return a corrected JSON object containing ALL fields (not just the fixed ones).
+2. Fix only the failing fields. Do not change fields that passed validation.
+3. You may ONLY perform non-substantive repairs:
+   - normalize enum casing and spelling when clearly implied by the text (e.g. "usd" -> "USD")
+   - normalize date formatting into ISO 8601 when a date is explicitly present
+   - trim whitespace and preserve existing values
+4. You must NOT invent or guess missing business values.
+   - Do NOT invent prices, fees, rates, quantities, dates, durations, payment terms, parties, governing law, or contract obligations.
+   - If a required business field is absent in the original contract text, keep it null.
+5. If the original text is contradictory, preserve the conflicting values and let validation fail rather than silently changing legal meaning.
+6. Ambiguity markers may explain uncertainty, but must not inject new business content.
+
+Examples of disallowed repairs:
+- paymentAmount: null -> 1000
+- paymentDueDays: null -> 30
+- fixedFee: null -> 1
+- governingLaw: null -> "State of Delaware"
+
+Examples of allowed repairs:
+- currency: "usd" -> "USD"
+- deliveryDate: "March 1, 2026" -> "2026-03-01T00:00:00.000Z"
+- client: "  Acme Corp  " -> "Acme Corp"
+
+Return the corrected JSON object now.`;
 }
 
 /** Build the contract-type identification prompt */

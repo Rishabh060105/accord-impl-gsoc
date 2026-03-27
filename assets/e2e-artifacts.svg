@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="918" viewBox="0 0 1280 918">
+<rect width="100%" height="100%" fill="#f4f7fb"/>
+<rect x="36" y="28" rx="18" ry="18" width="1208" height="86" fill="#123b4a"/>
+<text x="68" y="72" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="32" font-weight="700" fill="#ffffff">Generated Accord Artifacts</text>
+<text x="68" y="102" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="17" fill="#cde7ef">Once extraction and repair finish, the generator emits the contract model, human-readable template text, and Ergo logic stub as synchronized outputs.</text>
+<rect x="36" y="150" rx="18" ry="18" width="1208" height="718" fill="#0f172a" stroke="#1f2a44"/>
+<circle cx="68" cy="176" r="7" fill="#ff5f56"/><circle cx="92" cy="176" r="7" fill="#ffbd2e"/><circle cx="116" cy="176" r="7" fill="#27c93f"/>
+<text x="68" y="212" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">model.cto</text>
+<text x="68" y="238" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">---------</text>
+<text x="68" y="264" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">concept DeliveryPaymentContract extends AccordContract {</text>
+<text x="68" y="290" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  o String buyer</text>
+<text x="68" y="316" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  o String seller</text>
+<text x="68" y="342" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  o String deliveryItem</text>
+<text x="68" y="368" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  o DateTime deliveryDate</text>
+<text x="68" y="394" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  o Double paymentAmount</text>
+<text x="68" y="420" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  o String currency</text>
+<text x="68" y="446" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  o Integer paymentDueDays</text>
+<text x="68" y="472" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">}</text>
+<text x="68" y="498" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">grammar.tem.md</text>
+<text x="68" y="524" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">--------------</text>
+<text x="68" y="550" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">**Buyer name**: {{buyer}}   -&gt; Alice</text>
+<text x="68" y="576" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">**Seller name**: {{seller}} -&gt; Bob</text>
+<text x="68" y="602" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">**Payment amount**: {{paymentAmount}} -&gt; 7500</text>
+<text x="68" y="628" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">**Payment due days**: {{paymentDueDays}} -&gt; 7</text>
+<text x="68" y="654" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">**Delivery date**: {{deliveryDate}} -&gt; [MISSING]</text>
+<text x="68" y="680" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">logic.ergo</text>
+<text x="68" y="706" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">----------</text>
+<text x="68" y="732" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">contract DeliveryPayment over DeliveryPaymentContract {</text>
+<text x="68" y="758" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  clause payment(request: Request): Response {</text>
+<text x="68" y="784" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">    enforce isDeliveryLate(contract.deliveryDate) = false</text>
+<text x="68" y="810" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">    return Response{}</text>
+<text x="68" y="836" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">  }</text>
+<text x="68" y="862" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">}</text>
+</svg>

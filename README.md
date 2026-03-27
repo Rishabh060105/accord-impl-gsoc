@@ -9,11 +9,6 @@ This project implements a **semantics-aware contract drafting system** that comb
 * **Deterministic contract generation**
 * **Accord Project-compatible artifacts**
 
-### Project Context & Initial Requirements
-
-The system was designed following the spec for a robust, model-driven drafting pipeline that ensures legal consistency and structural integrity.
-
-
 ## Core Idea
 
 Instead of generating contracts directly using an LLM, this system enforces a strict pipeline:
@@ -176,11 +171,11 @@ The IR is the **semantic core** of the system.
 
 ---
 
-## Validation & Repair Loop
+## Repair Loop Logic
 
-The validator ensures structural and semantic integrity. If validation fails, errors are fed back into the LLM for a targeted repair pass, creating a **self-correcting drafting system**.
+The repair loop starts by validating the extracted **Intermediate Representation (IR)** against the selected contract schema and template rules. If the validator finds missing required fields, wrong types, enum mismatches, or business-rule violations, those errors are passed to the **Repair Specialist Agent** as targeted feedback.
 
-The same repair loop is now surfaced through the agentic orchestrator as an explicit `Validation Auditor ↔ Repair Specialist` cycle, while still delegating the real validation logic to the existing deterministic validator.
+The Repair Specialist updates only the failing fields and sends the revised IR back through validation. This validation-repair cycle continues until the IR passes validation or the configured retry limit is reached. If the requirement is still unresolved after the final retry, the workflow surfaces the remaining error instead of inventing business values.
 
 ---
 
@@ -268,6 +263,38 @@ Generated:
 * `grammar.tem.md`
 * `logic.ergo`
 * `package.json`
+
+---
+
+## End-to-End Example
+
+The following prompt was executed through the agentic CLI using the Groq backend:
+
+> Draft a contract where a buyer named Alice agrees to pay a seller named Bob an amount of 7500 USD within 7 days after delivery of goods. The payment should only be made if the goods pass inspection. If the inspection fails, the buyer is not obligated to pay. The delivery date should be explicitly included in the agreement.
+
+### 1. CLI Input and Workflow Execution
+
+![CLI Prompt Execution](assets/e2e-cli-run.svg)
+
+The CLI receives the natural-language requirement, selects the `DeliveryPayment` contract type, and drives the agentic workflow through classification, extraction, validation, repair, and generation.
+
+### 2. Generated Intermediate Representation (IR)
+
+![Generated IR](assets/e2e-ir.svg)
+
+The IR captures the extracted business facts in a schema-bound structure. Present values such as the parties, amount, currency, and payment window are preserved, while unspecified fields such as the delivery date remain `null`.
+
+### 3. Validation Result After the Repair Loop
+
+![Validation Result](assets/e2e-validation.svg)
+
+The validator checks the IR for missing required fields and schema violations after each repair pass. In this example, the workflow correctly stops with an unresolved `deliveryDate` error because the prompt asks for the date to be included but never supplies an actual date, so the system surfaces the gap instead of fabricating one.
+
+### 4. Generated Accord Artifacts
+
+![Generated Accord Artifacts](assets/e2e-artifacts.svg)
+
+Once the workflow completes, the generator emits aligned Accord artifacts: the Concerto data model, the TemplateMark text template, and the Ergo logic stub. The final outputs reflect the extracted values and still show unresolved fields as `[MISSING]`, making the generated package easy to review before further editing.
 
 ---
 

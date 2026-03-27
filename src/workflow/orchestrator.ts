@@ -1,4 +1,4 @@
-import { createEmptyIR, type IR } from "../ir/types.js";
+import { isAmbiguous, type IR, type IRFields, type IRValue } from "../ir/types.js";
 import type { LLMProvider } from "../llm/interface.js";
 import {
   extractIRWithProvider,
@@ -16,7 +16,7 @@ import {
   type WorkflowContext,
   type WorkflowStage,
 } from "./context.js";
-import type { ContractSchema, FieldSchema } from "../registry/contractTypes.js";
+import type { FieldSchema } from "../registry/contractTypes.js";
 
 export interface AgenticWorkflowOptions {
   forceContractType?: string;
@@ -223,7 +223,7 @@ export class AgenticWorkflowOrchestrator {
     );
 
     if (!validation.valid) {
-      const fallbackIR = applyDeterministicCompletion(
+      const fallbackIR = applyDeterministicNormalization(
         currentIR,
         context.normalizedBrief ?? context.rawRequirements
       );
@@ -242,11 +242,10 @@ export class AgenticWorkflowOrchestrator {
     }
 
     if (!validation.valid) {
-      throw new Error(
-        [
-          "IR failed validation.",
-          ...validation.errors.map((error) => `[${error.code}] ${error.field}: ${error.message}`),
-        ].join("\n")
+      this.finishStage(
+        context,
+        "validation",
+        `Proceeding with invalid IR to allow [MISSING] field detection. Errors: ${validation.errors.length}`
       );
     }
   }
@@ -365,150 +364,80 @@ function detectContractTypeHeuristically(input: string): string | null {
   return null;
 }
 
-function applyDeterministicCompletion(ir: IR, contractText: string): IR {
+function applyDeterministicNormalization(ir: IR, contractText: string): IR {
   const { schema } = loadContractType(ir.contractType);
-  const completedFields = { ...ir.fields };
+  const normalizedFields: IRFields = { ...ir.fields };
 
   for (const [fieldName, fieldSchema] of Object.entries(schema.fields)) {
-    const currentValue = completedFields[fieldName];
-    if (!fieldSchema.required) {
+    const currentValue = normalizedFields[fieldName];
+    if (currentValue === undefined || currentValue === null) {
       continue;
     }
 
-    if (currentValue === undefined || currentValue === null) {
-      completedFields[fieldName] = inferFallbackValue(fieldName, fieldSchema, contractText, ir.contractType);
-    }
-  }
-
-  // Contract-specific minimums to satisfy business rules for sparse prompts.
-  if (ir.contractType === "ServiceAgreement") {
-    if (completedFields.ratePerHour == null && completedFields.fixedFee == null) {
-      completedFields.fixedFee = 1000;
-    }
-  }
-
-  if (ir.contractType === "DeliveryPayment") {
-    if (completedFields.paymentAmount == null || completedFields.paymentAmount === 0) {
-      completedFields.paymentAmount = 1000;
-    }
-    if (completedFields.paymentDueDays == null || completedFields.paymentDueDays === 0) {
-      completedFields.paymentDueDays = 30;
-    }
-  }
-
-  if (ir.contractType === "LatePenalty") {
-    if (completedFields.penaltyRatePercent == null || completedFields.penaltyRatePercent === 0) {
-      completedFields.penaltyRatePercent = 1;
-    }
-    if (
-      completedFields.maxPenaltyPercent != null &&
-      typeof completedFields.maxPenaltyPercent === "number" &&
-      typeof completedFields.penaltyRatePercent === "number" &&
-      completedFields.maxPenaltyPercent <= completedFields.penaltyRatePercent
-    ) {
-      completedFields.maxPenaltyPercent = completedFields.penaltyRatePercent + 5;
+    const normalizedValue = normalizeExistingValue(currentValue, fieldSchema, contractText);
+    if (normalizedValue !== undefined) {
+      normalizedFields[fieldName] = normalizedValue;
     }
   }
 
   return {
     ...ir,
-    fields: completedFields,
+    fields: normalizedFields,
   };
 }
 
-function inferFallbackValue(
-  fieldName: string,
+function normalizeExistingValue(
+  value: IRValue,
   fieldSchema: FieldSchema,
-  contractText: string,
-  contractType: string
-): string | number | boolean {
-  const lower = contractText.toLowerCase();
-
-  if (fieldSchema.enum && fieldSchema.enum.length > 0) {
-    const matched = fieldSchema.enum.find((value) => lower.includes(value.toLowerCase()));
-    return matched ?? fieldSchema.enum[0];
-  }
-
-  switch (fieldSchema.type) {
-    case "DateTime": {
-      const explicitDate = extractDate(contractText);
-      return explicitDate ?? "2026-01-01T00:00:00.000Z";
+  contractText: string
+): IRValue | undefined {
+  if (isAmbiguous(value)) {
+    const normalizedAmbiguous = normalizeRawValue(value.value, fieldSchema, contractText);
+    if (normalizedAmbiguous === undefined) {
+      return undefined;
     }
-    case "Integer":
-      if (fieldName.toLowerCase().includes("days")) return 30;
-      return 1;
-    case "Double":
-      if (fieldName.toLowerCase().includes("rate")) return 1;
-      if (fieldName.toLowerCase().includes("fee")) return 1000;
-      return 1;
-    case "Boolean":
-      return false;
-    case "Duration":
-      return "P1M";
-    case "String":
-    default:
-      return inferStringFallback(fieldName, contractText, contractType);
-  }
-}
-
-function extractDate(contractText: string): string | null {
-  const match = contractText.match(
-    /\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{1,2},?\s+\d{4}\b/i
-  );
-
-  if (!match) {
-    return null;
+    return {
+      ...value,
+      value: normalizedAmbiguous as string | number | boolean | null | Array<string | number | boolean | null>,
+    };
   }
 
-  const date = new Date(match[0]);
-  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+  return normalizeRawValue(value, fieldSchema, contractText);
 }
 
-function inferStringFallback(fieldName: string, contractText: string, contractType: string): string {
-  const lower = contractText.toLowerCase();
+function normalizeRawValue(
+  rawValue: IRValue | string | number | boolean | null | Array<string | number | boolean | null>,
+  fieldSchema: FieldSchema,
+  _contractText: string
+): IRValue | undefined {
+  if (rawValue === null) {
+    return undefined;
+  }
 
-  if (fieldName.toLowerCase().includes("currency")) {
-    for (const code of ["USD", "EUR", "GBP", "INR", "JPY", "AUD", "CAD"]) {
-      if (lower.includes(code.toLowerCase())) {
-        return code;
+  if (typeof rawValue === "string") {
+    const trimmed = rawValue.trim().replace(/\s+/g, " ");
+
+    if (fieldSchema.enum && fieldSchema.enum.length > 0) {
+      const matched = fieldSchema.enum.find((allowed) => allowed.toLowerCase() === trimmed.toLowerCase());
+      if (matched && matched !== rawValue) {
+        return matched;
       }
     }
-    return "USD";
+
+    if (fieldSchema.type === "DateTime") {
+      const date = new Date(trimmed);
+      if (!Number.isNaN(date.getTime())) {
+        const iso = date.toISOString();
+        if (iso !== rawValue) {
+          return iso;
+        }
+      }
+    }
+
+    if (trimmed !== rawValue) {
+      return trimmed;
+    }
   }
 
-  if (fieldName === "paymentFrequency") {
-    if (lower.includes("milestone")) return "MILESTONE";
-    if (lower.includes("weekly")) return "WEEKLY";
-    if (lower.includes("biweekly")) return "BIWEEKLY";
-    if (lower.includes("monthly")) return "MONTHLY";
-    return "MILESTONE";
-  }
-
-  const partyDefaults: Record<string, string> = {
-    buyer: "Buyer Party",
-    seller: "Seller Party",
-    serviceProvider: "Service Provider",
-    client: "Client",
-    obligorParty: "Obligor",
-    obligeeParty: "Obligee",
-  };
-
-  if (fieldName in partyDefaults) {
-    return partyDefaults[fieldName]!;
-  }
-
-  const descriptionDefaults: Record<string, string> = {
-    deliveryItem: "Goods",
-    serviceDescription: "Professional services",
-    governingLaw: "State of Delaware",
-    obligationType: contractType === "LatePenalty" ? "DELIVERY" : fieldName,
-    penaltyPeriod: "WEEKLY",
-    deliveryLocation: "TBD",
-  };
-
-  if (fieldName in descriptionDefaults) {
-    return descriptionDefaults[fieldName]!;
-  }
-
-  return fieldName;
+  return undefined;
 }

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="632" viewBox="0 0 1280 632">
+<rect width="100%" height="100%" fill="#f4f7fb"/>
+<rect x="36" y="28" rx="18" ry="18" width="1208" height="86" fill="#123b4a"/>
+<text x="68" y="72" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="32" font-weight="700" fill="#ffffff">CLI Prompt Execution</text>
+<text x="68" y="102" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="17" fill="#cde7ef">The agentic CLI accepts the natural-language requirement, classifies the template, and runs the repair loop before generating artifacts.</text>
+<rect x="36" y="150" rx="18" ry="18" width="1208" height="432" fill="#0f172a" stroke="#1f2a44"/>
+<circle cx="68" cy="176" r="7" fill="#ff5f56"/><circle cx="92" cy="176" r="7" fill="#ffbd2e"/><circle cx="116" cy="176" r="7" fill="#27c93f"/>
+<text x="68" y="212" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#67e8f9">$</text>
+<text x="88" y="212" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">npm run agentic -- &quot;Draft a contract where a buyer named Alice agrees to pay a seller</text>
+<text x="68" y="238" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">named Bob an amount of 7500 USD within 7 days after delivery of goods. The payment</text>
+<text x="68" y="264" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">should only be made if the goods pass inspection. If the inspection fails, the buyer is</text>
+<text x="68" y="290" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">not obligated to pay. The delivery date should be explicitly included in the</text>
+<text x="68" y="316" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">agreement.&quot; --provider groq</text>
+<text x="68" y="342" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">Accord Agentic Workflow</text>
+<text x="68" y="368" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">Provider: groq</text>
+<text x="68" y="394" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">Contract type: DeliveryPayment</text>
+<text x="68" y="420" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">Repair passes: 3</text>
+<text x="68" y="446" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">Review</text>
+<text x="68" y="472" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">Contract type: DeliveryPayment</text>
+<text x="68" y="498" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">Provider: groq</text>
+<text x="68" y="524" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">Repair passes used: 3</text>
+<text x="68" y="550" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">Warnings: none</text>
+<text x="68" y="576" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="18" fill="#e5eefc">Outputs: model.cto, grammar.tem.md, logic.ergo, package.json</text>
+</svg>
