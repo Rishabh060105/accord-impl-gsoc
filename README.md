@@ -89,7 +89,7 @@ This system is fully integrated with the **Accord Project Template Playground**,
 ### Engine Selection
 The UI allows users to toggle between the deterministic (Regex) engine and the LLM-powered engine.
 
-![Drafting Panel Toggle](assets/Screenshot 2026-03-26 at 2.52.14 PM.png)
+![Drafting Panel Toggle](assets/ss-engine-toggle.png)
 
 ### Integration Flow
 1. Generate template package: `model.cto`, `grammar.tem.md`, `logic.ergo`, `package.json`.
@@ -112,20 +112,20 @@ The generated grammar includes variable bindings and formatted human-readable te
 
 | Details Extraction | Bound Clause Text |
 | ----------------- | ---------------- |
-| ![TemplateMark Binding 1](assets/Screenshot 2026-03-26 at 2.52.29 PM.png) | ![TemplateMark Text](assets/Screenshot 2026-03-26 at 2.52.51 PM.png) |
-| ![TemplateMark Binding 2](assets/Screenshot 2026-03-26 at 2.52.42 PM.png) | |
+| ![TemplateMark Binding 1](assets/ss-templatemark-details-top.png) | ![TemplateMark Text](assets/ss-templatemark-clause-text.png) |
+| ![TemplateMark Binding 2](assets/ss-templatemark-details-bottom.png) | |
 
 ### 2. Concerto (Data Model)
 The system creates a strictly typed Concerto model (`.cto`) that maps exactly to the extracted IR fields.
 
-![Concerto Model Header](assets/Screenshot 2026-03-26 at 2.53.06 PM.png)
-![Concerto Model Fields](assets/Screenshot 2026-03-26 at 2.53.16 PM.png)
+![Concerto Model Header](assets/ss-concerto-model-top.png)
+![Concerto Model Fields](assets/ss-concerto-model-bottom.png)
 
 ### 3. Ergo (Executable Logic)
 For supported contract types, the system generates executable Ergo logic stubs to handle contract events.
 
-![Ergo Logic 1](assets/Screenshot 2026-03-26 at 2.53.27 PM.png)
-![Ergo Logic 2](assets/Screenshot 2026-03-26 at 2.53.41 PM.png)
+![Ergo Logic 1](assets/ss-ergo-top.png)
+![Ergo Logic 2](assets/ss-ergo-bottom.png)
 
 ---
 

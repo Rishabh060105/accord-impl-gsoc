@@ -6,6 +6,11 @@ import { OpenAIProvider } from "../llm/providers/OpenAIProvider.js";
 import { AnthropicProvider } from "../llm/providers/AnthropicProvider.js";
 import type { LLMProvider } from "../llm/interface.js";
 import { AgenticWorkflowOrchestrator } from "../workflow/orchestrator.js";
+import fs from "node:fs";
+import path from "node:path";
+import type { GeneratedArtifacts } from "../generation/generator.js";
+import * as readline from "node:readline/promises";
+import { stdin as input, stdout as output } from "node:process";
 
 interface ParsedArgs {
   requirements: string;
@@ -18,8 +23,13 @@ interface ParsedArgs {
 
 async function main(): Promise<void> {
   const parsed = parseArgs(process.argv.slice(2));
+  
+  let requirements = parsed.requirements;
+  if (!requirements) {
+    requirements = await promptForRequirements();
+  }
 
-  if (!parsed.requirements) {
+  if (!requirements) {
     printHelp();
     process.exitCode = 1;
     return;
@@ -32,7 +42,7 @@ async function main(): Promise<void> {
     verbose: parsed.verbose,
   });
 
-  const result = await orchestrator.run(parsed.requirements);
+  const result = await orchestrator.run(requirements);
 
   if (!result.success) {
     console.error("Workflow failed.");
@@ -64,6 +74,34 @@ async function main(): Promise<void> {
     console.log("- grammar.tem.md");
     console.log("- logic.ergo");
     console.log("- package.json");
+
+    saveArtifacts(context.artifacts);
+  }
+}
+
+function saveArtifacts(artifacts: GeneratedArtifacts): void {
+  const outputDir = path.resolve(process.cwd(), "generated");
+
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+
+  fs.writeFileSync(path.join(outputDir, "model.cto"), artifacts.modelCto);
+  fs.writeFileSync(path.join(outputDir, "grammar.tem.md"), artifacts.grammarTemMd);
+  fs.writeFileSync(path.join(outputDir, "logic.ergo"), artifacts.logicErgo);
+  fs.writeFileSync(path.join(outputDir, "package.json"), artifacts.packageJson);
+
+  console.log(`\nArtifacts saved to: ${outputDir}`);
+}
+
+async function promptForRequirements(): Promise<string> {
+  const rl = readline.createInterface({ input, output });
+  try {
+    console.log("\nAccord Agentic CLI — Interactive Mode");
+    const answer = await rl.question("Enter your template requirements (natural language):\n> ");
+    return answer.trim();
+  } finally {
+    rl.close();
   }
 }
 
@@ -151,7 +189,9 @@ function requireEnv(name: string): string {
 
 function printHelp(): void {
   console.log(`Usage:
-  node --loader ts-node/esm src/cli/index.ts "Draft a service agreement" [options]
+  node --loader ts-node/esm src/cli/index.ts [requirements] [options]
+
+  If [requirements] is omitted, the CLI will enter interactive mode.
 
 Options:
   --provider, -p             mock | groq | openai | anthropic
