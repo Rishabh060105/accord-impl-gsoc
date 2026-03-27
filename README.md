@@ -111,9 +111,9 @@ The system produces three primary Accord Project artifacts from a single contrac
 The generated grammar includes variable bindings and formatted human-readable text.
 
 | Details Extraction | Bound Clause Text |
-| ----------------- | ---------------- |
-| ![TemplateMark Binding 1](assets/ss-templatemark-details-top.png) | ![TemplateMark Text](assets/ss-templatemark-clause-text.png) |
-| ![TemplateMark Binding 2](assets/ss-templatemark-details-bottom.png) | |
+| :--- | :--- |
+| <img src="assets/ss-templatemark-details-top.png" width="450" /> | <img src="assets/ss-templatemark-clause-text.png" width="450" /> |
+| <img src="assets/ss-templatemark-details-bottom.png" width="450" /> | |
 
 ### 2. Concerto (Data Model)
 The system creates a strictly typed Concerto model (`.cto`) that maps exactly to the extracted IR fields.
